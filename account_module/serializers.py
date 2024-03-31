@@ -7,6 +7,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         model = Register_User
         fields = '__all__'
 
+
+
 class Login_UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Login_User

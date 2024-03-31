@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -40,11 +40,10 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name='قیمت')
     short_description = models.CharField(max_length=360, db_index=True, null=True, verbose_name='توضیحات کوتاه')
     description = models.TextField(verbose_name='توضیحات اصلی', db_index=True)
-    slug = models.SlugField(default="", null=False, db_index=True, blank=True, max_length=200, unique=True, verbose_name='عنوان در url')
+    slug = models.SlugField(default="", null=False, db_index=True, blank=True, max_length=200, unique=True,
+                            verbose_name='عنوان در url')
     is_active = models.BooleanField(default=False, verbose_name='فعال / غیرفعال')
     is_delete = models.BooleanField(verbose_name='حذف شده / نشده')
-
-
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -67,3 +66,10 @@ class ProductTag(models.Model):
 
     def __str__(self):
         return self.caption
+
+
+class Order_Product(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    delivery_time = models.DateTimeField()
+    recipient_name = models.CharField(max_length=100)

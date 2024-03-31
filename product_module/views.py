@@ -1,10 +1,18 @@
+from urllib import request
+
 from django.shortcuts import render
 from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from django.shortcuts import render, redirect
+from .forms import OrderForm
+from django.contrib.auth.decorators import login_required
+from .models import Product, ProductCategory, ProductTag, ProductBrand, Order_Product
+from .serializers import ProductSerializer, ProductBrandSerializer, ProductCategorySerializer, ProductTagSerializer,OrderProductSerializer
 
-from .models import Product,ProductCategory,ProductTag,ProductBrand
-from .serializers import ProductSerializer,ProductBrandSerializer,ProductCategorySerializer,ProductTagSerializer
+
 
 # Create your views here.
 class ProductGenericApiView(generics.ListCreateAPIView):
@@ -13,16 +21,19 @@ class ProductGenericApiView(generics.ListCreateAPIView):
 
 
 class ProductDetailView(APIView):
-   def get(self,request,Product_id):
-       try:
-           product = Product.objects.get(pk= Product_id)
-           serializer = ProductSerializer(product)
-           return Response(serializer.data)
-       except Product.DoesNotExist:
-           return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, Product_id):
+        try:
+            product = Product.objects.get(pk=Product_id)
+            serializer = ProductSerializer(product)
+            return Response(serializer.data)
+        except Product.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class ProductCategoryGenericApiView(generics.ListAPIView):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
+
 
 class ProductTagGenericApiView(generics.ListAPIView):
     queryset = ProductTag.objects.all()
@@ -32,3 +43,24 @@ class ProductTagGenericApiView(generics.ListAPIView):
 class ProductBrandGenericApiView(generics.ListAPIView):
     queryset = ProductBrand.objects.all()
     serializer_class = ProductBrandSerializer
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def order_product(request):
+    # اینجا شما می‌توانید اطلاعات محصول و اطلاعات مربوط به سفارش را از درخواست دریافت کنید
+    # برای مثال، می‌توانید از درخواست بخش‌هایی مانند محصول، زمان تحویل و اطلاعات شخص تحویل‌گیرنده را بگیرید
+
+    product = request.data.get('product')
+    delivery_time = request.data.get('delivery_time')
+    receiver_info = request.data.get('receiver_info')
+
+    # انجام عملیات اضافه کردن محصول به سبد خرید
+    # اینجا می‌توانید منطق مربوط به اضافه کردن محصول به سبد خرید را اجرا کنید
+
+    # مثال: ذخیره اطلاعات سفارش
+    order_product.objects.create(product=product, delivery_time=delivery_time, receiver_info=receiver_info)
+
+    # در اینجا می‌توانید هرگونه پاسخ مربوط به عملیات اضافه کردن به سبد خرید را برگردانید
+    return Response({"message": "محصول با موفقیت به سبد خرید اضافه شد"}, status=status.HTTP_201_CREATED)
+
