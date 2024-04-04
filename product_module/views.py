@@ -48,15 +48,14 @@ class ProductBrandGenericApiView(generics.ListAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def order_product(request):
-    # اینجا شما می‌توانید اطلاعات محصول و اطلاعات مربوط به سفارش را از درخواست دریافت کنید
-    # برای مثال، می‌توانید از درخواست بخش‌هایی مانند محصول، زمان تحویل و اطلاعات شخص تحویل‌گیرنده را بگیرید
-
+    
+     
     product = request.data.get('product')
     delivery_time = request.data.get('delivery_time')
     receiver_info = request.data.get('receiver_info')
 
-    # انجام عملیات اضافه کردن محصول به سبد خرید
-    # اینجا می‌توانید منطق مربوط به اضافه کردن محصول به سبد خرید را اجرا کنید
+
+    
 
     # مثال: ذخیره اطلاعات سفارش
     order_product.objects.create(product=product, delivery_time=delivery_time, receiver_info=receiver_info)
