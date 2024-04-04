@@ -48,18 +48,11 @@ class ProductBrandGenericApiView(generics.ListAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def order_product(request):
-    
-     
     product = request.data.get('product')
     delivery_time = request.data.get('delivery_time')
     receiver_info = request.data.get('receiver_info')
-
-
     
-
-    # مثال: ذخیره اطلاعات سفارش
     order_product.objects.create(product=product, delivery_time=delivery_time, receiver_info=receiver_info)
 
-    # در اینجا می‌توانید هرگونه پاسخ مربوط به عملیات اضافه کردن به سبد خرید را برگردانید
     return Response({"message": "محصول با موفقیت به سبد خرید اضافه شد"}, status=status.HTTP_201_CREATED)
 
